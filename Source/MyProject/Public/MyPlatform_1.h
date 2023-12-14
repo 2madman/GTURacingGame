@@ -23,4 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	int Seconds = 0;
+	int Minutes = 0;
 };

@@ -17,9 +17,6 @@ void AMyPlatform_1::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    int Seconds = 0;
-    int Minutes = 0;
-
     Seconds++;
 
     if (Seconds >= 60)
