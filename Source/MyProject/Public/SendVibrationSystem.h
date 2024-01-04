@@ -4,36 +4,49 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include <winsock2.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <Windows.h>
+#elif defined(_linux_)
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#endif
+
 #include "SendVibrationSystem.generated.h"
 
 struct VibData {
-	bool isActive;
+    bool isActive;
 };
 
 UCLASS()
 class MYPROJECT_API ASendVibrationSystem : public AActor
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
-	ASendVibrationSystem();
+    // Sets default values for this actor's properties
+    ASendVibrationSystem();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
 
-	HANDLE hMapFile;
+#if defined(_WIN32) || defined(_WIN64)
+    HANDLE hMapFile;
+#elif defined(_linux_)
+    // Linux-specific variables if needed
+#endif
 
-	VibData* s_data_shared;
+    VibData* s_data_shared;
 
-	UFUNCTION(BlueprintCallable, Category = "BoranCategory")
-		void Vibrate();
+    UFUNCTION(BlueprintCallable, Category = "BoranCategory")
+    void Vibrate();
 
-	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };

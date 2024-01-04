@@ -4,57 +4,66 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include <iostream>
+
+#if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
+#elif defined(_linux_)
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#endif
+
 #include "CarInputSW.generated.h"
 
 struct SensorData {
-	double angle;
-	double brake;
-	double gas;
+    double angle;
+    double brake;
+    double gas;
 };
 
 UCLASS()
 class MYPROJECT_API ACarInputSW : public AActor
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
-	ACarInputSW();
+    // Sets default values for this actor's properties
+    ACarInputSW();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
 
-	float last_angle = 0;
-	float last_gas = 955;
-	float last_brake = 1025;
+    float last_angle = 0;
+    float last_gas = 0;
+    float last_brake = 0;
 
+    UFUNCTION(BlueprintCallable, Category = "BoranCategory")
+    void PrintSomething();
 
-	UFUNCTION(BlueprintCallable, Category = "BoranCategory")
-	void PrintSomething();
+    UFUNCTION(BlueprintCallable, Category = "BoranCategory")
+    float getBrake();
 
-	UFUNCTION(BlueprintCallable, Category = "BoranCategory")
-	float getBrake();
+    UFUNCTION(BlueprintCallable, Category = "BoranCategory")
+    float getGas();
 
-	UFUNCTION(BlueprintCallable, Category = "BoranCategory")
-	float getGas();
+    UFUNCTION(BlueprintCallable, Category = "BoranCategory")
+    float getAngle();
 
-	UFUNCTION(BlueprintCallable, Category = "BoranCategory")
-	float getAngle();
+    float map(float min_x, float max_x, float x, float a, float b);
 
-	float map(float min_x, float max_x, float x, float a, float b);
+    SensorData* s_data_shared;
 
-	SensorData* s_data_shared;
+#if defined(_WIN32) || defined(_WIN64)
+    HANDLE hMapFile;
+#elif defined(_linux_)
+    int shm_fd;
+#endif
 
-	HANDLE hMapFile;
-
-	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
+    void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };
-
