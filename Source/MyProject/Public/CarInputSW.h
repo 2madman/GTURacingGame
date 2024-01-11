@@ -55,6 +55,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "BoranCategory")
     float getAngle();
 
+    UFUNCTION(BlueprintCallable, Category = "BoranCategory")
+    float getAngleMapped();
+
     float map(float min_x, float max_x, float x, float a, float b);
 
     SensorData* s_data_shared;

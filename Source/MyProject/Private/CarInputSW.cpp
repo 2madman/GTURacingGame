@@ -109,10 +109,24 @@ float ACarInputSW::getAngle()
 //	if (input_angle > MAX_VAL || input_angle < MIN_VAL)
 //		return last_angle;
 
-	float to_return = map(MIN_VAL, MAX_VAL, input_angle, -1, 1);
+	float to_return = input_angle;
 	last_angle = to_return;
 
 	return to_return;
+}
+
+float ACarInputSW::getAngleMapped(){
+	const float MAX_VAL = 360.0f;
+	const float MIN_VAL = -360.0f;
+
+	float input_angle = s_data_shared->angle;
+
+	float to_return = map(MIN_VAL, MAX_VAL, input_angle, -1, 1);
+
+	if(to_return < 0.03 && to_return > -0.03)
+		to_return = 0.0f;
+
+	return to_return;	
 }
 
 float ACarInputSW::map(float min_x, float max_x, float x, float a, float b)
